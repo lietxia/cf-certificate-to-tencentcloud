@@ -1,24 +1,46 @@
 # GitHub Action for Tencent Cloud CDN certificate deployment
 
-Deploy SSL certificate to Tencent Cloud CDN.
+Deploy Cloudflare SSL certificate to Tencent Cloud CDN.
 
 ## Usage
 
 This action will deploy your PEM-formatted SSL certificate to Tencent Cloud CDN.
 
+### Set Github Secrets
+* CF_TOKEN
+* CF_ZONE_ID
+* EMAIL
+* DOMAIN
+* QCLOUD_SECRET_ID
+* QCLOUD_SECRET_KEY
+
 ```yaml
+
+name: auto certificate
+on:
+  workflow_dispatch:
 jobs:
   deploy-to-qcloud-cdn:
-    name: Deploy certificate to Tencent Cloud CDN
+    name: Deploy cloudflare certificate to Tencent Cloud CDN
+    
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          # If you just commited and pushed your newly issued certificate to this repo in a previous job,
-          # use `ref` to make sure checking out the newest commit in this job
-          ref: ${{ github.ref }}
-      - uses: renbaoshuo/deploy-certificate-to-tencentcloud@v2
+      - name: get acme
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+          EMAIL: ${{ secrets.EMAIL }}
+          DOMAIN: ${{ secrets.DOMAIN }}
+        run: |
+          curl https://get.acme.sh | sh -s email=${EMAIL}
+          export CF_Token=$CF_TOKEN
+          export CF_Zone_ID=$CF_ZONE_ID
+          bash ~/.acme.sh/acme.sh --issue --dns dns_cf -d ${DOMAIN} -d *.${DOMAIN}
+          cd ~/.acme.sh/${DOMAIN}_ecc/
+          echo "FILE_FULLCHAIN=$(pwd)/fullchain.cer" >> $GITHUB_ENV
+          echo "FILE_KEY=$(pwd)/${DOMAIN}.key" >> $GITHUB_ENV
+
+      - uses: lietxia/cf-certificate-to-tencentcloud@v2
         with:
           # Use Access Key
           secret-id: ${{ secrets.QCLOUD_SECRET_ID }}
@@ -31,8 +53,9 @@ jobs:
 
           # Deploy to CDN
           cdn-domains: |
-            cdn1.example.com
-            cdn2.example.com
+            www.r-mj.com
+            rate.r-mj.com
+            cdn.r-mj.com
 ```
 
 ## Permissions
