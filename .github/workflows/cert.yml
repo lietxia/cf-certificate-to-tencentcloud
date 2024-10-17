@@ -23,7 +23,7 @@ jobs:
           echo "FILE_FULLCHAIN=$(pwd)/fullchain.cer" >> $GITHUB_ENV
           echo "FILE_KEY=$(pwd)/${DOMAIN}.key" >> $GITHUB_ENV
 
-      - uses: renbaoshuo/deploy-certificate-to-tencentcloud@v2
+      - uses: lietxia/cf-certificate-to-tencentcloud@v2
         with:
           # Use Access Key
           secret-id: ${{ secrets.QCLOUD_SECRET_ID }}
