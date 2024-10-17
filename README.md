@@ -18,6 +18,8 @@ This action will deploy your PEM-formatted SSL certificate to Tencent Cloud CDN.
 
 name: auto certificate
 on:
+  schedule:
+    - cron: '0 0 1 * *'
   workflow_dispatch:
 jobs:
   deploy-to-qcloud-cdn:
