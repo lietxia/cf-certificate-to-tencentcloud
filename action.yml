@@ -1,5 +1,5 @@
-name: Deploy SSL certificate to Tencent Cloud CDN
-description: Deploy SSL certificate to Tencent Cloud CDN.
+name: Deploy cloudflare certificate to Tencent Cloud CDN
+description: Deploy cloudflare certificate to Tencent Cloud CDN
 branding:
   icon: lock
   color: green
