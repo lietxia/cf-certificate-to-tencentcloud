@@ -20,8 +20,8 @@ jobs:
           export CF_Zone_ID=$CF_ZONE_ID
           bash ~/.acme.sh/acme.sh --issue --dns dns_cf -d ${DOMAIN} -d *.${DOMAIN}
           cd ~/.acme.sh/${DOMAIN}_ecc/
-          export FILE_FULLCHAIN=$(pwd)/fullchain.cer
-          export FILE_KEY=$(pwd)/${DOMAIN}.key
+          echo "FILE_FULLCHAIN=$(pwd)/fullchain.cer" >> $GITHUB_ENV
+          echo "FILE_KEY=$(pwd)/${DOMAIN}.key" >> $GITHUB_ENV
 
       - uses: renbaoshuo/deploy-certificate-to-tencentcloud@v2
         with:
