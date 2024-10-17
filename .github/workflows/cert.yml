@@ -15,13 +15,13 @@ jobs:
           EMAIL: ${{ secrets.EMAIL }}
           DOMAIN: ${{ secrets.DOMAIN }}
         run: |
-          curl https://get.acme.sh | sh -s email=lietxia@gmail.com
+          curl https://get.acme.sh | sh -s email=${EMAIL}
           export CF_Token=$CF_TOKEN
           export CF_Zone_ID=$CF_ZONE_ID
-          bash ~/.acme.sh/acme.sh --issue --dns dns_cf -d $DOMAIN -d '*.$DOMAIN'
-          cd ~/.acme.sh/${{ secrets.DOMAIN }}_ecc/
+          bash ~/.acme.sh/acme.sh --issue --dns dns_cf -d ${DOMAIN} -d *.${DOMAIN}
+          cd ~/.acme.sh/${DOMAIN}_ecc/
           export FILE_FULLCHAIN=$(pwd)/fullchain.cer
-          export FILE_KEY=$(pwd)/${{ secrets.DOMAIN }}.key
+          export FILE_KEY=$(pwd)/${DOMAIN}.key
 
       - uses: renbaoshuo/deploy-certificate-to-tencentcloud@v2
         with:
